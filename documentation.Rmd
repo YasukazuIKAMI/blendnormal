@@ -1,0 +1,60 @@
+---
+title: "Documentation of Shiny application"
+author: "Yasukazu IKAMI"
+date: "Saturday, June 13, 2015"
+output: html_document
+---
+#Summary
+This shiny application calculates and illustrates the combined distribution of two sets of random sampling from normal distribution.
+
+#Description
+Two sample sets named `input1` and `input2`, with size `nsamp` are prepared. Parameter of `input1` and `input2` are their means and standard deviations. For `input1` mean is `mu1`, standard deviation is `sd1`. Same rule for `input2`.
+
+Each elements from two sample sets are averaged. And new sample set `average` is generated.
+Shiny application illustrates the relation of input and averaged distributions graphically.
+User can input mean and standard deviation parameter for each of input distributions 
+and number of samples.
+
+Range of parameters are as follows.
+`nsamp` 2 to 1000000, default = 100.
+`mu1` -10 to 10, default = 0.
+`sd1` 1 to 10, default = 1.
+`mu2` -10 to 10, default = 0.
+`sd2` 1 to 10, default = 1.
+
+
+Here is a example. Where number of sample `nsamp` is 10000. Parameter of `input1` is `mu1 = 0, sd1 = 1` and for `input2`, they are `mu2 = 10, and sd2 = 2`. Histogram of sample sets are illustrated.
+```{r, echo=FALSE, warning=FALSE}
+set.seed(111)
+library(reshape)
+library(ggplot2)
+#library(ggplot2)
+mu1 <- 0
+sd1 <- 1
+mu2 <- 10
+sd2 <- 2
+
+nsamp <- 10000
+
+input1 <- rnorm(nsamp,mean=mu1,sd=sd1)
+input2 <- rnorm(nsamp,mean=mu2,sd=sd2)
+average <- (input1+input2)/2
+mu3 <- mean(average)
+sd3 <- sd(average)
+#mu3
+#sd3
+
+
+df <- melt(data.frame(input1,input2,average))
+#head(df)
+g <- ggplot(df,aes(x=value,fill=variable))
+g <- g + geom_histogram(alpha=0.5,position="identity")
+plot(g)
+
+```
+
+And server.R calculates the mean and standard deviation of averaged sample set.
+```{r}
+mu3
+sd3
+```
